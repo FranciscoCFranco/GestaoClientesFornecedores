@@ -41,6 +41,19 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                {{ $fornecedores->appends($request)->links() }}
+                <br>
+                <!--Total de registros por página - {{ $fornecedores->count() }}
+                    <br>
+                    Total de registros cadastrados - {{ $fornecedores->total() }}
+                    <br>
+                    Número do primeiro registro da página - {{ $fornecedores->firstItem() }}
+                    <br>
+                    Número do último registro da página -{{ $fornecedores->lastItem() }}-->
+
+                Exibindo {{ $fornecedores->count() }} fornecedores de {{ $fornecedores->total() }} (de
+                {{ $fornecedores->firstItem() }} a {{ $fornecedores->lastItem() }})
             </div>
         </div>
     </div>

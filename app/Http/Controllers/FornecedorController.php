@@ -18,9 +18,9 @@ class FornecedorController extends Controller
       ->where('site', 'like', '%' . $request->input('site') . '%')
       ->where('uf', 'like', '%' . $request->input('uf') . '%')
       ->where('email', 'like', '%' . $request->input('email') . '%')
-      ->get();
+      ->paginate(2);
 
-    return view('app.fornecedor.listar', ['fornecedores' => $fornecedores]);
+    return view('app.fornecedor.listar', ['fornecedores' => $fornecedores, 'request' => $request->all()]);
   }
 
   public function adicionar(Request $request)
@@ -28,7 +28,6 @@ class FornecedorController extends Controller
     $msg = '';
 
     if ($request->input('_token') != '') {
-      // Validação
       $regras = [
         'nome' => 'required|min:3|max:40',
         'site' => 'required',
@@ -50,10 +49,12 @@ class FornecedorController extends Controller
       if ($request->input('id') == '') {
         // Criar novo fornecedor
         $fornecedor = new Fornecedor();
-        $fornecedor->create($request->all());
+        $fornecedor->fill($request->all());
+        $fornecedor->save();
         $msg = 'Cadastro realizado com sucesso';
+        $id = $fornecedor->id;
       } else {
-        // Atualizar fornecedor existente
+
         $fornecedor = Fornecedor::find($request->input('id'));
         $update = $fornecedor->update($request->all());
 
@@ -62,8 +63,10 @@ class FornecedorController extends Controller
         } else {
           $msg = 'Erro ao tentar atualizar o registro';
         }
+        $id = $fornecedor->id;
       }
-      return redirect()->route('app.fornecedor.editar', ['id' => $request->input('id'), 'msg' => $msg]);
+
+      return redirect()->route('app.fornecedor.editar', ['id' => $id, 'msg' => $msg]);
     }
 
     return view('app.fornecedor.adicionar', ['msg' => $msg]);
