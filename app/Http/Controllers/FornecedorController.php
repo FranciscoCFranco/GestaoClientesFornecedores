@@ -81,11 +81,11 @@ class FornecedorController extends Controller
 
   public function excluir($id)
   {
-    $fornecedor = Fornecedor::find($id);
-    if ($fornecedor) {
-      $fornecedor->delete();
-      return redirect()->route('app.fornecedor')->with('success', 'Fornecedor excluído com sucesso.');
-    }
+
+    Fornecedor::find($id)->delete();
+
+    return redirect()->route('app.fornecedor')->with('success', 'Fornecedor excluído com sucesso.');
+
 
     return redirect()->route('app.fornecedor')->with('error', 'Fornecedor não encontrado.');
   }
