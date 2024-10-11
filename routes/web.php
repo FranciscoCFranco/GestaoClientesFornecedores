@@ -41,7 +41,7 @@ Route::middleware('autenticacao:padrao,visitante,p3,p4')->prefix('/app')->group(
   Route::get('/fornecedor/excluir/{id}', 'FornecedorController@excluir')->name('app.fornecedor.excluir');
 
 
-  Route::get('/produto', 'ProdutoController@index')->name('app.produto');
+  Route::resource('/produto', 'ProdutoController');
 });
 
 // Rotas de Teste
