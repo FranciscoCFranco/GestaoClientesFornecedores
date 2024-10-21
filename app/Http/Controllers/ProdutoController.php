@@ -90,6 +90,7 @@ class ProdutoController extends Controller
   {
     $unidades = Unidade::all();
     return view('app.produto.edit', ['produto' => $produto, 'unidades' => $unidades]);
+    //return view('app.produto.create', ['produto' => $produto, 'unidades' => $unidades]);
   }
 
   /**
@@ -122,7 +123,7 @@ class ProdutoController extends Controller
 
     $produto->update($request->all());
 
-    return redirect()->route('produto.index')->with('success', 'Produto atualizado com sucesso!');
+    return redirect()->route('produto.show', ['produto' => $produto->id]);
   }
 
 
