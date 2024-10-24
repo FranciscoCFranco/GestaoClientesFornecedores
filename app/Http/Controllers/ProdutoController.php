@@ -17,10 +17,6 @@ class ProdutoController extends Controller
    */
   public function index(Request $request)
   {
-    $regras = [];
-
-    $feedback = [];
-
     $produtos = Item::with(['itemDetalhe'])->paginate(10);
 
     return view('app.produto.index', ['produtos' => $produtos, 'request' => $request->all()]);
@@ -33,7 +29,6 @@ class ProdutoController extends Controller
    */
   public function create()
   {
-
     $unidades = Unidade::all();
     return view('app.produto.create', ['unidades' => $unidades]);
   }
@@ -44,30 +39,28 @@ class ProdutoController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-
   public function store(Request $request)
   {
     $regras = [
-      'nome' => 'required|min:3|max:100',
-      'descricao' => 'required|min:3|max:2255',
-      'peso' => 'required|numeric',
+      'nome' => 'required|min:3|max:40',
+      'descricao' => 'required|min:3|max:2000',
+      'peso' => 'required|integer',
       'unidade_id' => 'exists:unidades,id'
     ];
 
     $feedback = [
-      'required' => 'O campo :attribute é obrigatório',
+      'required' => 'O campo :attribute deve ser preenchido',
       'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres',
-      'nome.max' => 'O campo nome deve ter no máximo 100 caracteres',
+      'nome.max' => 'O campo nome deve ter no máximo 40 caracteres',
       'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres',
-      'descricao.max' => 'O campo descrição deve ter no máximo 255 caracteres',
-      'peso.numeric' => 'O campo peso deve ser um número',
-      'unidade_id.exists' => 'A unidade de medida selecionada não existe'
+      'descricao.max' => 'O campo descrição deve ter no máximo 2000 caracteres',
+      'peso.integer' => 'O campo peso deve ser um número inteiro',
+      'unidade_id.exists' => 'A unidade de medida informada não existe'
     ];
 
     $request->validate($regras, $feedback);
 
     Produto::create($request->all());
-
     return redirect()->route('produto.index');
   }
 
@@ -104,30 +97,9 @@ class ProdutoController extends Controller
    */
   public function update(Request $request, Produto $produto)
   {
-    $regras = [
-      'nome' => 'required|min:3|max:40',
-      'descricao' => 'required|min:3|max:2000',
-      'peso' => 'required|integer',
-      'unidade_id' => 'exists:unidades,id'
-    ];
-
-    $feedback = [
-      'required' => 'O campo :attribute é obrigatório.',
-      'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres.',
-      'nome.max' => 'O campo nome deve ter no máximo 40 caracteres.',
-      'descricao.min' => 'O campo descrição deve ter no mínimo 3 caracteres.',
-      'descricao.max' => 'O campo descrição deve ter no máximo 2000 caracteres.',
-      'peso.integer' => 'O campo peso deve ser um número inteiro.',
-      'unidade_id.exists' => 'A unidade de medida selecionada é inválida.'
-    ];
-
-    $request->validate($regras, $feedback);
-
     $produto->update($request->all());
-
     return redirect()->route('produto.show', ['produto' => $produto->id]);
   }
-
 
   /**
    * Remove the specified resource from storage.
@@ -137,7 +109,7 @@ class ProdutoController extends Controller
    */
   public function destroy(Produto $produto)
   {
-    $produto->delete(); // Deleta o produto
-    return redirect()->route('produto.index')->with('success', 'Produto excluído com sucesso!');
+    $produto->delete();
+    return redirect()->route('produto.index');
   }
 }
