@@ -12,14 +12,6 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-    'required' => 'O campo :attribute é obrigatório.',
-    'min' => [
-        'string' => 'O campo :attribute deve ter no mínimo :min caracteres.',
-    ],
-    'max' => [
-        'string' => 'O campo :attribute deve ter no máximo :max caracteres.',
-    ],
-    'email' => 'O campo :attribute deve ser um e-mail válido.',
 
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',
