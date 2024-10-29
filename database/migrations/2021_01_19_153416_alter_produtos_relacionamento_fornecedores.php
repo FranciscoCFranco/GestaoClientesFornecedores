@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 class AlterProdutosRelacionamentoFornecedores extends Migration
 {
@@ -14,7 +15,7 @@ class AlterProdutosRelacionamentoFornecedores extends Migration
     public function up()
     {
         //criando a coluna em produtos que vai receber a fk de fornecedores
-        Schema::table('produtos', function(Blueprint $table) {
+        Schema::table('produtos', function (Blueprint $table) {
 
             //insere um registro de fornecedor para estabelecer o relacionamento
             $fornecedor_id = DB::table('fornecedores')->insertGetId([
@@ -37,7 +38,7 @@ class AlterProdutosRelacionamentoFornecedores extends Migration
     public function down()
     {
         //
-        Schema::table('produtos', function(Blueprint $table) {
+        Schema::table('produtos', function (Blueprint $table) {
             $table->dropForeign('produtos_fornecedor_id_foreing');
             $table->dropColumn('fornecedor_id');
         });
