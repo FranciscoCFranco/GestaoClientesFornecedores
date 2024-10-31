@@ -20,7 +20,7 @@ class ProdutoController extends Controller
     {
         $produtos = Item::with(['itemDetalhe', 'fornecedor'])->paginate(10);
 
-        return view('app.produto.index', ['produtos' => $produtos, 'request' => $request->all() ]);
+        return view('app.produto.index', ['produtos' => $produtos, 'request' => $request->all()]);
     }
 
     /**
@@ -44,6 +44,9 @@ class ProdutoController extends Controller
     public function store(Request $request)
     {
         $regras = [
+            'altura' => 'nullable|numeric',
+            'largura' => 'nullable|numeric',
+            'comprimento' => 'nullable|numeric',
             'nome' => 'required|min:3|max:40',
             'descricao' => 'required|min:3|max:2000',
             'peso' => 'required|integer',
@@ -52,6 +55,9 @@ class ProdutoController extends Controller
         ];
 
         $feedback = [
+            'altura.numeric' => 'O campo altura deve ser numérico',
+            'largura.numeric' => 'O campo largura deve ser numérico',
+            'comprimento.numeric' => 'O campo comprimento deve ser numérico',
             'required' => 'O campo :attribute deve ser preenchido',
             'nome.min' => 'O campo nome deve ter no mínimo 3 caracteres',
             'nome.max' => 'O campo nome deve ter no máximo 40 caracteres',
@@ -63,7 +69,7 @@ class ProdutoController extends Controller
         ];
 
         $request->validate($regras, $feedback);
-        
+
         Item::create($request->all());
         return redirect()->route('produto.index');
     }
@@ -125,7 +131,7 @@ class ProdutoController extends Controller
 
         //dd($request->all());
         $produto->update($request->all());
-        return redirect()->route('produto.show', ['produto' => $produto->id ]);
+        return redirect()->route('produto.show', ['produto' => $produto->id]);
     }
 
     /**

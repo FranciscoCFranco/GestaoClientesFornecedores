@@ -3,7 +3,7 @@
 @section('titulo', 'Produto')
 
 @section('conteudo')
-    
+
     <div class="conteudo-pagina">
 
         <div class="titulo-pagina-2">
@@ -37,9 +37,22 @@
                         <td>{{ $produto->peso }} kg</td>
                     </tr>
                     <tr>
+                        <td>Comprimento:</td>
+                        <td>{{ $produto->comprimento }}</td>
+                    </tr>
+                    <tr>
+                        <td>Altura:</td>
+                        <td>{{ $produto->altura }}</td>
+                    </tr>
+                    <tr>
+                        <td>Largura:</td>
+                        <td>{{ $produto->largura }}</td>
+                    </tr>
+                    <tr>
                         <td>Unidade de Medida:</td>
                         <td>{{ $produto->unidade_id }}</td>
                     </tr>
+
                 </table>
             </div>
         </div>
@@ -47,4 +60,3 @@
     </div>
 
 @endsection
-
