@@ -39,7 +39,7 @@ class AlterProdutosRelacionamentoFornecedores extends Migration
     {
         //
         Schema::table('produtos', function (Blueprint $table) {
-            $table->dropForeign('produtos_fornecedor_id_foreing');
+            $table->dropForeign('produtos_fornecedor_id_foreign');
             $table->dropColumn('fornecedor_id');
         });
     }

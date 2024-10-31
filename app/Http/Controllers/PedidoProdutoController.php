@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Unidade;
-use App\ProdutoDetalhe;
-use App\ItemDetalhe;
+use App\Pedido;
+use App\Produto;
 
-class ProdutoDetalheController extends Controller
+class PedidoProdutoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -24,10 +23,10 @@ class ProdutoDetalheController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Pedido $pedido)
     {
-        $unidades = Unidade::all();
-        return view('app.produto_detalhe.create', ['unidades' => $unidades]);
+        $produtos = Produto::all();
+        return view('app.pedido_produto.create', ['pedido' => $pedido, 'produtos' => $produtos]);
     }
 
     /**
@@ -36,10 +35,15 @@ class ProdutoDetalheController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Pedido $pedido)
     {
-        ProdutoDetalhe::create($request->all());
-        echo 'Cadastro realizado com sucesso';
+        echo '<pre>';
+        print_r($pedido);
+        echo '</pre>';
+        echo '<hr>';
+        echo '<pre>';
+        print_r($request->all());
+        echo '</pre>';
     }
 
     /**
@@ -56,27 +60,24 @@ class ProdutoDetalheController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Interteger $id
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $produtoDetalhe = ItemDetalhe::with(['item'])->find($id);
-        $unidades = Unidade::all();
-        return view('app.produto_detalhe.edit', ['produto_detalhe' => $produtoDetalhe, 'unidades' => $unidades]);
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  App\ProdutoDetalhe $produtoDetalhe
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ProdutoDetalhe $produtoDetalhe)
+    public function update(Request $request, $id)
     {
-        $produtoDetalhe->update($request->all());
-        echo 'Atualização foi realizada com sucesso';
+        //
     }
 
     /**

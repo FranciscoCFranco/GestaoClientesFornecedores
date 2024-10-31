@@ -5,16 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
     public function index(Request $request)
     {
-
         $erro = '';
 
         if ($request->get('erro') == 1) {
-            $erro = 'Usuário e ou senha não existe';
+            $erro = 'Usuário e/ou senha não existem';
         }
 
         if ($request->get('erro') == 2) {
@@ -26,44 +26,35 @@ class LoginController extends Controller
 
     public function autenticar(Request $request)
     {
-
         // Regras de validação
-        $regras = [
-            'usuario' => 'email',
+        $request->validate([
+            'usuario' => 'required|email',
             'senha' => 'required'
-        ];
-
-        // Mensagens de feedback de validação
-        $feedback = [
-            'usuario.email' => 'O campo usuário (e-mail) é obrigatório',
+        ], [
+            'usuario.required' => 'O campo usuário (e-mail) é obrigatório',
+            'usuario.email' => 'O campo usuário deve ser um e-mail válido',
             'senha.required' => 'O campo senha é obrigatório'
+        ]);
+
+        // Credenciais usando 'email' e 'password'
+        $credentials = [
+            'email' => $request->input('usuario'),
+            'password' => $request->input('senha')
         ];
 
-        // Se não passar pelo validate
-        $request->validate($regras, $feedback);
-
-        // Recuperamos os parâmetros do formulário
-        $email = $request->get('usuario');
-        $password = $request->get('senha');
-
-        // Iniciar o Model User
-        $user = User::where('email', $email)->first();
-
-        // Verifique se o usuário existe e a senha está correta
-        if ($user && Hash::check($password, $user->password)) {
-            session_start();
-            $_SESSION['nome'] = $user->name;
-            $_SESSION['email'] = $user->email;
-
+        // Tentativa de autenticação
+        if (Auth::attempt($credentials)) {
             return redirect()->route('app.home');
-        } else {
-            return redirect()->route('site.login', ['erro' => 1]);
         }
+
+        // Autenticação falhou
+        return redirect()->route('site.login', ['erro' => 1]);
     }
+
 
     public function sair()
     {
-        session_destroy();
+        Auth::logout(); // Usando o método do Laravel para logout
         return redirect()->route('site.index');
     }
 }

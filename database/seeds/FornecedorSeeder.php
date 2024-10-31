@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Fornecedor;
+use Illuminate\Support\Facades\DB;
 
 class FornecedorSeeder extends Seeder
 {
