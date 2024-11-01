@@ -5,7 +5,6 @@
 @section('conteudo')
 
     <div class="conteudo-pagina">
-
         <div class="titulo-pagina-2">
             <p>Adicionar Produtos ao Pedido</p>
         </div>
@@ -29,6 +28,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome do produto</th>
+                            <th>Data de inclusão do pedido</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,10 +37,21 @@
                             <tr>
                                 <td>{{ $produto->id }}</td>
                                 <td>{{ $produto->nome }}</td>
+                                <td>{{ $produto->pivot->created_at->format('d/m/y') }}</td>
+                                <td>
+                                    <form id="form_{{ $produto->pivot->id }}" method="post"
+                                        action="{{ route('pedido-produto.destroy', ['pedidoProduto' => $produto->pivot->id, 'pedido_id' => $pedido->id]) }}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <a href="#"
+                                            onclick="document.getElementById('form_{{ $produto->pivot->id }}').submit()">Excluir</a>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
+
                 @component('app.pedido_produto._components.form_create', ['pedido' => $pedido, 'produtos' => $produtos])
                 @endcomponent
             </div>

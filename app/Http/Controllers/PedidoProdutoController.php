@@ -14,10 +14,18 @@ class PedidoProdutoController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Pedido $pedido)
     {
-        //
+        // Busque todos os produtos disponíveis
+        $produtos = Produto::all(); // Ajuste isso conforme a sua lógica
+
+        return view('app.pedido_produto.create', [
+            'pedido' => $pedido,
+            'produtos' => $produtos, // Passe a lista de produtos para a view
+        ]);
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -40,19 +48,32 @@ class PedidoProdutoController extends Controller
     public function store(Request $request, Pedido $pedido)
     {
         $regras = [
-            'produto_id' => 'exists:produtos,id'
+            'produto_id' => 'exists:produtos,id',
+            'quantidade' => 'required'
         ];
 
         $feedback = [
-            'produto_id.exists' => 'O produto não existe.'
+            'produto_id.exists' => 'O produto não existe.',
+            'required' => 'O campo :attribute deve possuir um valor válido'
         ];
 
         $request->validate($regras, $feedback);
 
-        $pedidoProduto = new PedidoProduto();
+        /*$pedidoProduto = new PedidoProduto();
         $pedidoProduto->pedido_id = $pedido->id;
         $pedidoProduto->produto_id = $request->get('produto_id'); // Corrigido para produto_id
-        $pedidoProduto->save();
+        $pedidoProduto->save();*/
+
+        /*$pedido->produtos()->attach(
+            $request->get('produto_id'),
+            [
+                'quantidade' => $request->get('quantidade')
+            ]
+        );*/
+
+        $pedido->produtos()->attach([
+            $request->get('produto_id') => ['quantidade' => $request->get('quantidade')]
+        ]);
 
         return redirect()->route('pedido-produto.create', ['pedido' => $pedido->id]);
     }
@@ -98,8 +119,30 @@ class PedidoProdutoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(PedidoProduto $pedidoProduto, $pedido_id)
     {
-        //
+        /*
+        print_r($pedido->getAttributes());
+        echo '<hr>';
+        print_r($produto->getAttributes());
+        */
+
+        //echo $pedido->id.' - '.$produto->id;
+
+        //convencional
+        /*
+        PedidoProduto::where([
+            'pedido_id' => $pedido->id,
+            'produto_id' => $produto->id
+        ])->delete();
+        */
+
+        //detach (delete pelo relacionamento)
+        //$pedido->produtos()->detach($produto->id);
+        //produto_id
+
+        $pedidoProduto->delete();
+
+        return redirect()->route('pedido-produto.create', ['pedido' => $pedido_id]);
     }
 }
